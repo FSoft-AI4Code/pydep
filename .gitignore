@@ -5,4 +5,4 @@ TODO
 *.whl
 *.gz
 src/py_dependency.egg-info/*
-*/test*
+test.py
