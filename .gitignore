@@ -1,3 +1,8 @@
 **/__pycache__/
 tests/
 TODO
+*/dist/*
+*.whl
+*.gz
+src/py_dependency.egg-info/*
+*/test*
