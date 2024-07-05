@@ -3,10 +3,11 @@ from codetext.parser import PythonParser
 from tree_sitter import Language, Parser
 import tree_sitter
 import os
-from utils import get_node_by_kind, get_root_node, decorated_clean
-from utils import language_parser as parser
-from constant import PY_EXTENSIONS
 from typing import Dict
+
+from .utils import get_node_by_kind, get_root_node, decorated_clean
+from .utils import language_parser as parser
+from .constant import PY_EXTENSIONS
 
 def get_identifier_in_file(filepath: str) -> Dict:
     """
@@ -92,7 +93,3 @@ def get_repo_graph(repo_src: str, save_graph_to: str= None) -> Dict:
         with open(os.path.join(save_graph_to, f"{reponame}.json"), "w") as f:
             json.dump(graph, f, indent=4)
     return graph
-
-if __name__ == "__main__":
-    repo_src = "/home/namlh31aic/Project/AI4Code/py-dependency/py-dependency/tests/CodeText-parser"
-    print(get_repo_graph(repo_src))

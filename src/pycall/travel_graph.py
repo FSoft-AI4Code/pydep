@@ -1,6 +1,7 @@
-from utils import parse_import
 import os
-from constant import PY_EXTENSIONS
+
+from .utils import parse_import
+from .constant import PY_EXTENSIONS
 
 def search_path(key: str, graph, tracks= []):
     """

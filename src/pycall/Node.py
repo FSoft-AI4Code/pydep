@@ -1,9 +1,11 @@
 from codetext.parser import PythonParser
-from utils import get_root_node, get_node_by_kind, get_import_list, remove_content, find_all_substring
 import tree_sitter
-from travel_graph import import_analyze
-from build_repo_graph import get_repo_graph 
 from typing import List, Dict
+
+from .travel_graph import import_analyze
+from .utils import get_root_node, get_node_by_kind, get_import_list, remove_content, find_all_substring
+from .build_repo_graph import get_repo_graph 
+
 
 class ModuleNode:
     """
@@ -15,11 +17,6 @@ class ModuleNode:
     """
     def __init__(self, path: str, repo_src: str, repo_graph: Dict):
         self.path = path
-        # self.repo_src = repo_src
-        # self.repo_graph = repo_graph
-        # with open(path, "r") as f:
-        #     self.content = f.read()
-        # self.import_dict = self.import_details()
         self.function_list = []
         self.import_list = []
         

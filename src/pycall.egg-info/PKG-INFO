@@ -1,0 +1,18 @@
+Metadata-Version: 2.1
+Name: pycall
+Version: 0.0.5
+Summary: Extract dependencies of modules (function, class, import) in python repository
+Home-page: https://github.com/FSoft-AI4Code/py-dependency
+Author: Nam Le Hai
+Author-email: Nam Le Hai <nam.lh173264@gmail.com>
+Project-URL: Homepage, https://github.com/FSoft-AI4Code/py-dependency
+Project-URL: Bug Tracker, https://github.com/FSoft-AI4Code/py-dependency/issues
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: GitPython==3.1.43
+Requires-Dist: tree-sitter==0.22.3
+Requires-Dist: tree-sitter-python==0.21.0
+Requires-Dist: codetext==0.0.9
