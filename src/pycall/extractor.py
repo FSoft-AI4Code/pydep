@@ -166,7 +166,7 @@ def get_import_dependencies(target_import: ImportNode, module_function_dict: Dic
     for import_info in import_dict:
         if import_info["import_path"] not in selected_file:
             selected_file[import_info["import_path"]] = []
-        if import_info["name"] == "*":
+        if import_info["name"] == "*" or import_info["import_file_or_folder"]:
             selected_file[import_info["import_path"]].append("*")
         else:
             selected_file[import_info["import_path"]].append(import_info["module"])

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pycall"
-version = "0.0.5"
+version = "0.0.6"
 authors = [
   { name="Nam Le Hai", email="nam.lh173264@gmail.com" },
 ]
