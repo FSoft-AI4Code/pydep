@@ -22,6 +22,10 @@ def print_function(str):
 
 # folder1/file2.py
 from file1 import print_function
+
+def start_print():
+  print_function("Author: Nam Le Hai")
+
 def print_hello():
   print_function("hello")
 ```
@@ -70,23 +74,23 @@ output = extractor.extract()
 >>> extractor = Extractor(reposrc)
 >>> output = extractor.extract()
 >>> output
-{'simple_repo/file1.py': <pydepcall.Node.ModuleNode object at 0x7fc5fafa45e0>, 'simple_repo/folder1/file2.py': <pydepcall.Node.ModuleNode object at 0x7fc5fba401c0>}
+{'simple_repo/file1.py': <pydepcall.Node.ModuleNode object at 0x7faeb6d84580>, 'simple_repo/folder1/file2.py': <pydepcall.Node.ModuleNode object at 0x7faeb7822050>}
 
 >>> output["simple_repo/folder1/file2.py"].function_list
-[<pydepcall.Node.FunctionNode object at 0x7fc5fb176c20>]
+[<pydepcall.Node.FunctionNode object at 0x7faeb6bc2740>, <pydepcall.Node.FunctionNode object at 0x7faeb6bc2530>]
 
 >>> output["simple_repo/folder1/file2.py"].function_list[0].children
 [<pydepcall.Node.ImportNode object at 0x7fc5fade6320>]
 
 >>> output["simple_repo/folder1/file2.py"].function_list[0].children[0].children
-[<pydepcall.Node.FunctionNode object at 0x7fc5fba421d0>]
+[<pydepcall.Node.FunctionNode object at 0x7faeb6bc22c0>]
 
 >>> output["simple_repo/folder1/file2.py"].function_list[0].children[0].children[0].content
-'def a():\n    print(1)'
+'def print_function(str):\n  print(str)'
 ```
 
 ### Output format
-For extracting a specific module, the output will be a ModuleNode of the input file.
+For extracting a specific module, the output will be a `ModuleNode` of the input file.
 
 For extracting the whole repository, the output will be the dictionary of `ModuleNode` with the keys are all module files in the repository. 
 
