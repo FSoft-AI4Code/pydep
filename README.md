@@ -88,7 +88,7 @@ output = extractor.extract()
 ### Output format
 For extracting a specific module, the output will be a ModuleNode of the input file.
 
-For extracting the whole repository, the output will be the dictionary of ModuleNode with the keys are all module files in the repository. 
+For extracting the whole repository, the output will be the dictionary of `ModuleNode` with the keys are all module files in the repository. 
 
 ### Node objects
 The package has 5 main nodes:
@@ -98,8 +98,8 @@ The package has 5 main nodes:
 - `ClassNode`: a node represents a class
 - `BlockNode`: a node represents a codeblock in the module file
 
-Every node except ModuleNode has the following attributes:
-- `path`: the module file contain that node
+Every node except `ModuleNode` has the following attributes:
+- `path`: the module file's local path contain that node
 - `content`: the text content of the node (function, import, class or codeblock)
 - `position_in_file`: the position of the node in the module file
 
