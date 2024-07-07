@@ -1,9 +1,9 @@
 # Dependency call extraction tool for Python modules
 
 ## What does this package do?
-This package can use to extract functions, import statements (TODO: class) in a module file, and its call dependencies in a source repository.
+This package can use to extract functions, import statements (TODO: class) in a module file, and their call dependencies in a source repository.
 
-Example:
+**Example:**
 
 _Consider a simple repository structure_
 ```
