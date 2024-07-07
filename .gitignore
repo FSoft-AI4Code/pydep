@@ -4,5 +4,5 @@ TODO
 */dist/*
 *.whl
 *.gz
-src/pycall.egg-info/*
+src/pydepcall.egg-info/*
 test.py
