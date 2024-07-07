@@ -4,7 +4,8 @@
 This package can use to extract functions, import statements (TODO: class) in a module file, and its call dependencies in a source repository.
 
 Example:
-Consider a simple repository structure:
+
+_Consider a simple repository structure_
 ```
 simple_repo
   |
@@ -13,7 +14,7 @@ simple_repo
         |_ file2.py     
 ```
 
-The content in each file is
+_The content in each file is_
 ```
 # file1.py
 def print_function(str):
@@ -25,7 +26,7 @@ def print_hello():
   print_function("hello")
 ```
 
-The tool can use to find the dependency of `print_hello()` function in file2.py which is the `print_function()` function imported from file1.py
+The tool can use to find the dependency of `print_hello()` function in `file2.py` which is the `print_function()` function imported from `file1.py`.
 
 ## Quickstart Guide
 
@@ -47,14 +48,14 @@ pip install pydepcall
 from pydepcall import Extractor
 ```
 
-If you want to extract all module files in the repository
+_If you want to extract all module files in the repository_
 ```
 reposrc = YOUR_LOCAL_PATH_OF_REPO
 extractor = Extractor(reposrc)
 output = extractor.extract()
 ```
 
-If you want to extract a specific module file in the repository
+_If you want to extract a specific module file in the repository_
 ```
 reposrc = YOUR_LOCAL_PATH_OF_REPO
 module_file = YOUR_LOCAL_PATH_OF_FILE_IN_REPO
@@ -62,9 +63,27 @@ extractor = Extractor(reposrc, module_file)
 output = extractor.extract()
 ```
 
+**Example**
+
 ### Output format
 For extracting a specific module, the output will be a ModuleNode of the input file.
 
 For extracting the whole repository, the output will be the dictionary of ModuleNode with the keys are all module files in the repository. 
 
+### Node objects
+The package has 5 main nodes:
+- ModuleNode: contains all FunctionNode and ImportNode in a module file
+- ImportNode: a node represents an import statement
+- FunctionNode: a node represents a python function
+- ClassNode: a node represents a class
+- BlockNode: a node represents a codeblock in the module file
+
+Every node except ModuleNode has the following attributes:
+- path: the module file contain that node
+- content: the text content of the node (function, import, class or codeblock)
+- position_in_file: the position of the node in the module file
+
+For `FunctionNode` and `ImportNode`, we can acquire their dependencies through their `children (node.children)` attribute.
+
+Please see [Node.py](https://github.com/FSoft-AI4Code/pydepcall/blob/main/src/pydepcall/Node.py) for more details.
 
