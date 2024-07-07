@@ -72,14 +72,17 @@ output = extractor.extract()
 >>> output
 {'simple_repo/file1.py': <pydepcall.Node.ModuleNode object at 0x7fc5fafa45e0>, 'simple_repo/folder1/file2.py': <pydepcall.Node.ModuleNode object at 0x7fc5fba401c0>}
 
->>> output["tests/simple_repo/folder1/file2.py"].function_list
+>>> output["simple_repo/folder1/file2.py"].function_list
 [<pydepcall.Node.FunctionNode object at 0x7fc5fb176c20>]
 
->>> output["tests/simple_repo/folder1/file2.py"].function_list[0].children
+>>> output["simple_repo/folder1/file2.py"].function_list[0].children
 [<pydepcall.Node.ImportNode object at 0x7fc5fade6320>]
 
->>> output["tests/simple_repo/folder1/file2.py"].function_list[0].children[0].children
+>>> output["simple_repo/folder1/file2.py"].function_list[0].children[0].children
 [<pydepcall.Node.FunctionNode object at 0x7fc5fba421d0>]
+
+>>> output["simple_repo/folder1/file2.py"].function_list[0].children[0].children[0].content
+'def a():\n    print(1)'
 ```
 
 ### Output format
