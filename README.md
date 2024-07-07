@@ -64,6 +64,20 @@ output = extractor.extract()
 ```
 
 **Example**
+```
+reposrc = "simple_repo"
+extractor = Extractor(reposrc)
+output = extractor.extract()
+output
+
+>>> {'simple_repo/file1.py': <pydepcall.Node.ModuleNode object at 0x7fc5fafa45e0>, 'simple_repo/folder1/file2.py': <pydepcall.Node.ModuleNode object at 0x7fc5fba401c0>}
+
+output["tests/simple_repo/folder1/file2.py"].function_list
+>>> [<pydepcall.Node.FunctionNode object at 0x7fc5fb176c20>]
+
+output["tests/simple_repo/folder1/file2.py"].function_list[0].children
+>>> [<pydepcall.Node.ImportNode object at 0x7fc5fade6320>]
+```
 
 ### Output format
 For extracting a specific module, the output will be a ModuleNode of the input file.
@@ -72,16 +86,16 @@ For extracting the whole repository, the output will be the dictionary of Module
 
 ### Node objects
 The package has 5 main nodes:
-- ModuleNode: contains all FunctionNode and ImportNode in a module file
-- ImportNode: a node represents an import statement
-- FunctionNode: a node represents a python function
-- ClassNode: a node represents a class
-- BlockNode: a node represents a codeblock in the module file
+- `ModuleNode`: contains all FunctionNode and ImportNode in a module file
+- `ImportNode`: a node represents an import statement
+- `FunctionNode`: a node represents a python function
+- `ClassNode`: a node represents a class
+- `BlockNode`: a node represents a codeblock in the module file
 
 Every node except ModuleNode has the following attributes:
-- path: the module file contain that node
-- content: the text content of the node (function, import, class or codeblock)
-- position_in_file: the position of the node in the module file
+- `path`: the module file contain that node
+- `content`: the text content of the node (function, import, class or codeblock)
+- `position_in_file`: the position of the node in the module file
 
 For `FunctionNode` and `ImportNode`, we can acquire their dependencies through their `children (node.children)` attribute.
 
