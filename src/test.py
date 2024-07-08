@@ -1,14 +1,15 @@
-from pycall import Extractor
-from pycall.Node import FunctionNode, ImportNode
+from pydepcall import Extractor
+from pydepcall.Node import FunctionNode, ImportNode
 
-src = "/home/namlh31aic/Project/AI4Code/py-dependency/tests/CodeText-parser"
-module = "/home/namlh31aic/Project/AI4Code/py-dependency/tests/CodeText-parser/src/codetext/parser/c_sharp_parser.py"
+src = "/home/namlh31aic/Project/AI4Code/pydepcall/tests/simple_repo"
+module = "/home/namlh31aic/Project/AI4Code/pydepcall/tests/simple_repo/folder1/file2.py"
 
-extractor = Extractor(src, module)
-module = extractor.extract()
-print(extractor)
+extractor = Extractor(src, None)
+modules = extractor.extract()
+module = modules[module]
+print(len(module.import_list))
 
-id = 0
+id = 1
 function = module.function_list[id]
 
 print(function.content)

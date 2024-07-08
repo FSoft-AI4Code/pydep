@@ -1,8 +1,7 @@
-from typing import List
+from typing import List, Dict
 import tree_sitter
 import tree_sitter_python as tspython
 from tree_sitter import Language, Parser
-from .utils import fix_white_space
 import sys
 sys.setrecursionlimit(200)
 
@@ -52,7 +51,7 @@ def get_root_node(content: str) -> tree_sitter.Node:
     root = language_parser.parse(bytes(content, "utf8"))
     return root.root_node
 
-def get_import_list(content: str) -> List[tree_sitter.Node]:
+def get_import_nodes(content: str) -> List[tree_sitter.Node]:
     """
     Obtain all import statments in a code file
     
@@ -66,28 +65,7 @@ def get_import_list(content: str) -> List[tree_sitter.Node]:
     import_nodes = get_node_by_kind(root_node, kind = ["import_statement", "import_from_statement", "future_import_statement"])
     return import_nodes
 
-def parse_import(import_node: tree_sitter.Node):
-    
-    # import_text = import_node.text.decode()
-    # import_line = remove_comment(import_text)
-    # import_line = fix_white_space(import_line.replace("\n", " ").replace("\\", " ").replace("(", " ").replace(")", " "))
-    # if import_line.endswith(","):
-    #     import_line = import_line[:-1]
-
-    # if " as " in import_line:
-    #     module_name = import_line.split(" as ")[-1].strip()
-    #     original_import_info = import_line.split(" as ")[0].strip()
-    # else:
-    #     module_name = None
-    #     original_import_info = import_line
-
-    # if import_node.type == "import_statement":
-    #     package = None
-    #     import_modules = [x.strip() for x in original_import_info[7:].strip().split(",")] # ignore 7 characters of "import "         
-    # else:
-    #     module_name = None
-    #     import_modules = [x.strip() for x in original_import_info.split(" import ")[-1].strip().split(",")]
-    #     package = import_line[5:].strip().split()[0] # ignore 5 character of "from "  
+def parse_import(import_node):
     
     import_module_nodes = []
     package = None
@@ -143,7 +121,7 @@ def decorated_clean(content: str) -> str:
             new_lines.append(line)
     return "\n".join(new_lines)
 
-def map_line_to_id(content):
+def map_line_to_id(content: str) -> Dict:
     line2id = {}
     tmp = []
     for lid, line in enumerate(content.splitlines()):
@@ -154,7 +132,7 @@ def map_line_to_id(content):
         tmp.append(line)
     return line2id
 
-def remove_content(content: str, rm_position: List):
+def remove_content(content: str, rm_position: List) -> str:
     content = bytes(content, "utf8")
     line2id = map_line_to_id(content)
     new_rm_position = [0]
@@ -167,7 +145,7 @@ def remove_content(content: str, rm_position: List):
         new_content += content[new_rm_position[pos_id]:new_rm_position[pos_id+1]].decode("utf8")
     return new_content
 
-def remove_comment(content):
+def remove_comment(content: str) -> str:
     root_node = get_root_node(content)
 
     positions = []
@@ -180,7 +158,7 @@ def remove_comment(content):
         cleaned_content = content
     return cleaned_content.strip()
 
-def code_basic_clean(file_content):
+def code_basic_clean(file_content: str) -> str:
     """
     1. clean highlevel comment
     2. clean decorated line (line startswith @ )

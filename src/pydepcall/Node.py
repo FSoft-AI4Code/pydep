@@ -3,8 +3,7 @@ import tree_sitter
 from typing import List, Dict
 
 from .travel_graph import import_analyze
-from .utils import get_root_node, get_node_by_kind, get_import_list, remove_content, find_all_substring
-from .build_repo_graph import get_repo_graph 
+from .utils import get_root_node, get_node_by_kind, remove_content, find_all_substring
 
 
 class ModuleNode:
@@ -13,9 +12,10 @@ class ModuleNode:
 
     Attributes:
         path (str): the local path of file containing the function
-        repo_src (str): the local path of the repository containing the module
+        function list (list): list of functions (FunctionNode) in the module file
+        import list (list): list of import statement (ImportNode) in the module file
     """
-    def __init__(self, path: str, repo_src: str, repo_graph: Dict):
+    def __init__(self, path: str):
         self.path = path
         self.function_list = []
         self.import_list = []
@@ -32,7 +32,7 @@ class FunctionNode:
         name (str): function's name
         params (dict): function's parameters
         return_type (str): function's return type
-        docstrings (str): function's docstring
+        docstring (str): function's docstring
         called_identifiers (list): called dependencies inside function
         position_in_file (tuple): start, end position of function in module file
         tree_sitter_node (tree_sitter.Node): Node parsed from file using tree-sitter
@@ -113,32 +113,30 @@ class ImportNode:
         content (str): the function content in text
         position_in_file (tuple): start, end position of import statement in module file
         tree_sitter_node (tree_sitter.Node): Node parsed from file using tree-sitter
+        children (list): List of called dependencies
     """
-    def __init__(self, path: str, content: str, tree_sitter_node: tree_sitter.Node, repo_graph: Dict):
+    def __init__(self, path: str, content: str, tree_sitter_node: tree_sitter.Node):
         self.path = path
         self.content = content
         self.tree_sitter_node = tree_sitter_node
-        self.repo_graph = repo_graph
 
         self.position_in_file = (tree_sitter_node.start_point, tree_sitter_node.end_point)
-        self.import_dict = self.parse_import()
+        self.import_dict = []
         self.children = []
-
-    def parse_import(self):
-        import_dict = import_analyze([self.tree_sitter_node], self.path, self.repo_graph)
-        return import_dict
 
 
 
 def remove_parentheses(input_string):
-    # Remove string so that we can avoid parentheses in string
+    
     root_node = get_root_node(input_string)
     rm_positions = []
+    
+    # Remove string so that we can avoid parentheses in string
     for node in get_node_by_kind(root_node, kind=["string"], avoid_nested=True):
         rm_positions.append((node.start_point, node.end_point)) 
     string = remove_content(input_string, rm_positions)
 
-
+    # Remove all parentheses
     open_indexes = find_all_substring("\(", string)
     close_indexes = find_all_substring("\)", string)
     assert len(open_indexes) == len(close_indexes), input_string

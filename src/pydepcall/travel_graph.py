@@ -1,6 +1,6 @@
 import os
 
-from .utils import parse_import
+from .utils import parse_import, get_root_node, get_node_by_kind
 from .constant import PY_EXTENSIONS
 
 def search_path(key: str, graph, tracks= []):
@@ -121,7 +121,7 @@ def import_analyze(import_nodes, filepath, repo_graph):
         for import_prefix in RELATIVE_IMPORT_PREFIXS:
             if import_detail["package"] is not None and import_detail["package"].startswith(import_prefix):
                 start_dir = filepath
-                for i in range(len(import_prefix)):
+                for _ in range(len(import_prefix)):
                     start_dir = os.path.dirname(start_dir)
                 
                 if import_detail["package"] != import_prefix:

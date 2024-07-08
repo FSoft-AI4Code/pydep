@@ -3,9 +3,10 @@ from typing import List, Dict
 from codetext.parser import PythonParser
 
 from .build_repo_graph import get_repo_graph
-from .utils import language_parser, get_root_node, get_node_by_kind, code_basic_clean, remove_comment
+from .utils import get_root_node, get_node_by_kind, get_import_nodes
 from .Node import FunctionNode, ClassNode, BlockNode, ImportNode, ModuleNode
 from .constant import PY_EXTENSIONS, EXCLUDED_TYPING_IDENTIFIERS
+from .travel_graph import import_analyze
 
 class Extractor:
     def __init__(self, repo_src: str, module: str=None):
@@ -21,13 +22,17 @@ class Extractor:
 
     def file_extract(self):
         functions = get_functions_from_module_file(self.module)
+        import_nodes = get_import_from_module_file(self.module)
         module_function_dict = {"function": {}, "import": {}}
-        module_node = ModuleNode(path= self.module, repo_src= self.repo_src, repo_graph= self.repo_graph)
+        module_node = ModuleNode(path= self.module)
         
         for function in functions:
             get_dependencies(function, module_function_dict, self.repo_src, self.repo_graph)
         
-        if self.module in [module_function_dict["function"]]: # check no extracted functions
+        for import_node in import_nodes:
+            get_dependencies(import_node, module_function_dict, self.repo_src, self.repo_graph)
+
+        if self.module in module_function_dict["function"]: # check no extracted functions
             module_node.function_list.extend(sorted([module_function_dict["function"][self.module][x] for x in module_function_dict["function"][self.module]], key= lambda x: x.position_in_file[0][0]))
         if self.module in module_function_dict["import"]: # check no extracted import
             module_node.import_list.extend(sorted([module_function_dict["import"][self.module][x] for x in module_function_dict["import"][self.module]], key= lambda x: x.position_in_file[0][0]))
@@ -43,10 +48,14 @@ class Extractor:
 
         for module in all_modules:
             functions = get_functions_from_module_file(module)
-            module_dict[module] = ModuleNode(path= module, repo_src= self.repo_src, repo_graph= self.repo_graph)
+            import_nodes = get_import_from_module_file(module)
+            module_dict[module] = ModuleNode(path= module)
 
             for function in functions:
                 get_dependencies(function, module_function_dict, self.repo_src, self.repo_graph)
+
+            for import_node in import_nodes:
+                get_dependencies(import_node, module_function_dict, self.repo_src, self.repo_graph)
 
             if module in module_function_dict["function"]:
                 module_dict[module].function_list.extend(sorted([module_function_dict["function"][module][x] for x in module_function_dict["function"][module]], key= lambda x: x.position_in_file[0][0]))
@@ -96,8 +105,27 @@ def get_functions_from_module_file(module_path: str) -> List:
 
     return extracted_functions
 
+def get_import_from_module_file(module_path: str) -> List:
+    extracted_import = []
 
-def get_function_dependencies(target_function: FunctionNode, module_function_dict: Dict, repo_src: str, repo_graph: Dict):
+    # Read module file
+    try:
+        with open(module_path, "r", encoding="utf-8") as f:
+            file_content = f.read()
+    except:
+        return []
+
+    import_nodes = get_import_nodes(file_content)
+    if len(import_nodes) == 0:
+        return []
+
+    for import_node in import_nodes:
+        extracted_import.append(ImportNode(module_path, import_node.text.decode(), import_node))
+
+    return extracted_import
+
+
+def get_function_dependencies(target_function: FunctionNode, module_function_dict: Dict, repo_src: str, repo_graph: Dict) -> FunctionNode:
     
     local_path = target_function.path
     # Read module file
@@ -142,7 +170,7 @@ def get_function_dependencies(target_function: FunctionNode, module_function_dic
                     module_function_dict["import"][local_path] = {}
                 
                 if node.text.decode() not in module_function_dict["import"][local_path]:
-                    dep_import = ImportNode(local_path, node.text.decode(), node, repo_graph)
+                    dep_import = ImportNode(local_path, node.text.decode(), node)
                     get_dependencies(dep_import, module_function_dict, repo_src, repo_graph)
                 target_function.children.append(module_function_dict["import"][local_path][node.text.decode()])
         # only consider the first identifier
@@ -154,7 +182,8 @@ def get_function_dependencies(target_function: FunctionNode, module_function_dic
 
     return target_function    
 
-def get_import_dependencies(target_import: ImportNode, module_function_dict: Dict, repo_src: str, repo_graph: Dict):
+def get_import_dependencies(target_import: ImportNode, module_function_dict: Dict, repo_src: str, repo_graph: Dict) -> ImportNode:
+    target_import.import_dict = import_analyze([target_import.tree_sitter_node], target_import.path, repo_graph)
     import_dict = [x for x in target_import.import_dict if x["import_path"] and x["import_path"].startswith(repo_src)]
     
     # third party import or import that are failed to obtain path
@@ -173,7 +202,7 @@ def get_import_dependencies(target_import: ImportNode, module_function_dict: Dic
     
     for fid, import_file in enumerate(selected_file):
         try:
-            # Sometime the import_file extracted is a directory. We ignore this case now :(
+            # Sometime the import_path extracted is a directory. We ignore this case now :(
             with open(import_file, "r", encoding="utf-8") as f:
                 cross_file_content = f.read()
         except:
@@ -218,7 +247,7 @@ def get_import_dependencies(target_import: ImportNode, module_function_dict: Dic
                         module_function_dict["import"][import_file] = {}
                     
                     if node.text.decode() not in module_function_dict["import"][import_file]:
-                        dep_import = ImportNode(import_file, node.text.decode(), node, repo_graph)
+                        dep_import = ImportNode(import_file, node.text.decode(), node)
                         get_dependencies(dep_import, module_function_dict, repo_src, repo_graph)
                     target_import.children.append(module_function_dict["import"][import_file][node.text.decode()])
             elif node.type in ["expression_statement"]:
