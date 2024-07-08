@@ -5,7 +5,7 @@ with open("README.md", "r", encoding = "utf-8") as fh:
 
 setuptools.setup(
     name = "pydepcall",
-    version = "0.0.1",
+    version = "0.0.2",
     author = "Nam Le Hai",
     author_email = "nam.lh173264@gmail.com",
     description = "Extract dependencies of modules (function, class, import) in python repository",
