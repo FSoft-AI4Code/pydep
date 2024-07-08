@@ -67,7 +67,7 @@ extractor = Extractor(reposrc, module_file)
 output = extractor.extract()
 ```
 
-**Example**
+**Example**: See more in [example](https://github.com/FSoft-AI4Code/pydepcall/tree/main/example)
 ```
 >>> from pydepcall import Extractor
 >>> reposrc = "simple_repo"
