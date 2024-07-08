@@ -14,7 +14,7 @@ _Consider a simple repository structure_
 simple_repo
   |
   |_ file1.py
-  |_ folder1.py
+  |_ folder1
         |_ file2.py     
 ```
 
