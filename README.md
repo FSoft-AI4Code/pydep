@@ -1,16 +1,11 @@
-
-<div align="center">
-
 # Dependency call extraction tool for Python modules
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT) [![PyPI](https://img.shields.io/badge/PyPI-pydepcall-blue?style=flat&labelColor=blue&color=yellow)](https://pypi.org/project/pydepcall/) [![Python](https://img.shields.io/badge/Python-%3E%3D3.10-blue?style=flat
 )]() 
 
-</div>
-
 
 ## What does this package do?
-This package can use to extract functions, import statements (TODO: class) in a module file, and their call dependencies in a source repository.
+This package can be used to extract functions, import statements (TODO: class) in a module file, and their call dependencies in a source repository.
 
 **Example:**
 
@@ -43,7 +38,7 @@ The tool can use to find the dependency of `print_hello()` function in `file2.py
 
 ## Quickstart Guide
 
-Currently, our package only supports extracting dependency for functions and import statements in a module files.
+Currently, our package only supports extracting dependency for functions and import statements in a module file.
 
 ### Requirement
 Python >= 3.10
@@ -112,7 +107,7 @@ The package has 5 main nodes:
 - `BlockNode`: a node represents a codeblock in the module file
 
 Every node except `ModuleNode` has the following attributes:
-- `path`: the module file's local path contain that node
+- `path`: the module file's local path contains that node
 - `content`: the text content of the node (function, import, class or codeblock)
 - `position_in_file`: the position of the node in the module file
 
