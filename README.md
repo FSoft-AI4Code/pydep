@@ -19,7 +19,7 @@ simple_repo
 ```
 
 _The content in each file is_
-```
+```python
 # file1.py
 def print_function(str):
   print(str)
@@ -52,19 +52,19 @@ pip install pydepcall
 ```
 
 ### Usage:
-```
+```python
 from pydepcall import Extractor
 ```
 
 _If you want to extract all module files in the repository_
-```
+```python
 reposrc = YOUR_LOCAL_PATH_OF_REPO
 extractor = Extractor(reposrc)
 output = extractor.extract()
 ```
 
 _If you want to extract a specific module file in the repository_
-```
+```python
 reposrc = YOUR_LOCAL_PATH_OF_REPO
 module_file = YOUR_LOCAL_PATH_OF_FILE_IN_REPO
 extractor = Extractor(reposrc, module_file)
@@ -72,7 +72,7 @@ output = extractor.extract()
 ```
 
 **Example**: See more in [example](https://github.com/FSoft-AI4Code/pydepcall/tree/main/example)
-```
+```python
 >>> from pydepcall import Extractor
 >>> reposrc = "simple_repo"
 >>> extractor = Extractor(reposrc)
