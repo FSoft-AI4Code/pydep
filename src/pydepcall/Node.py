@@ -36,6 +36,7 @@ class FunctionNode:
         called_identifiers (list): called dependencies inside function
         position_in_file (tuple): start, end position of function in module file
         tree_sitter_node (tree_sitter.Node): Node parsed from file using tree-sitter
+        signature (str): function signature
         children (list): List of called dependencies
     """
     def __init__(self, path: str, content: str, tree_sitter_node: tree_sitter.Node):
@@ -43,6 +44,7 @@ class FunctionNode:
         self.content = content
         self.tree_sitter_node = tree_sitter_node
 
+        self.signature = self.get_signature()
         self.position_in_file = (tree_sitter_node.start_point, tree_sitter_node.end_point)
         self.name, self.params, self.return_type, self.docstring = self.get_metadata()
         self.called_identifiers = self.get_called_identifiers()
@@ -55,10 +57,26 @@ class FunctionNode:
         return function_metadata["identifier"], function_metadata["parameters"], function_metadata["return_type"], docstring
 
     def get_called_identifiers(self):
-        # Do not consider parameter identifier and typing types identifier. Do not forget to exclude self identifier
+        # Do not consider parameter identifier. Do not forget to exclude self identifier
         identifiers = [x for x in get_dependencies(self.tree_sitter_node) if x not in list(self.params.keys()) + [self.name]]
         return identifiers
     
+    def get_signature(self):
+        lines = []
+        for children in self.tree_sitter_node.children:
+            if children.type == "def":
+                shifted_line = children.start_point[0]
+            if children.type == ":":
+                for lid, line in enumerate(self.content.splitlines()):
+                    if lid == children.end_point[0]-shifted_line:
+                        line = line[:children.end_point[1]]
+                        lines.append(line)
+                        break
+                    lines.append(line)
+                break
+        output = "\n".join(lines)
+        return output
+        
 
 class ClassNode:
     """

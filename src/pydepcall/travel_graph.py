@@ -77,7 +77,8 @@ def search_by_repo_graph(import_detail, repo_graph, current_path):
         all_tracks = []
 
         if len(separated_path) == 0: # import module
-            # start_point = os.path.dirname(current_path).split("/")[-1]
+            # if the module is import directly, start_point will be set to None
+            # so that the module is searched in the root path
             start_point = None
             separated_path= [start_point]
         else:
