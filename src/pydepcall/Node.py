@@ -145,6 +145,17 @@ class ImportNode:
 
 
 def remove_parentheses(input_string):
+    """
+    Remove all parentheses "()" and the content inside
+    of a calling statement
+    
+    Examples:
+    >>> remove_parentheses("something.call(abc)")
+    something.call
+
+    >>> remove_parentheses("something.call().find('xyz')")
+    something.call.find
+    """
     
     root_node = get_root_node(input_string)
     rm_positions = []
